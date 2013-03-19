@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="ScannerActivity"></activity>
+        <activity android:name="NewUserActivity"></activity>
     </application>
 
 </manifest>
