@@ -1,7 +1,5 @@
 package com.thornton.k3spring;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
@@ -41,17 +39,19 @@ public class ScannerActivity extends Activity{
 			if (resultCode == RESULT_OK) {
 				final String contents = data.getStringExtra("SCAN_RESULT"); //this is the result
 				results.setText(contents);
-				final String[] result = contents.split("\n");
-				final String id = result[0];
-				final List<String> tasks = new ArrayList<String>();
-				for(final String task : result){
-					tasks.add(task);
-				}
-				//Remove the id from the field
-				tasks.remove(0);
-				result.toString();
-				final Calendar c = Calendar.getInstance();
+				final Task newTask = new Task(contents);
+				newTask.toString();
 
+				final DatabaseHelper helper = new DatabaseHelper(this);
+				final List<Task> tasks = helper.getTasksFromId(newTask.getId());
+				if(tasks.isEmpty()){
+					helper.addTask(newTask);
+				}else{
+					for(final Task task : tasks){
+						task.markComplete();
+						helper.updateAllTasksToComplete(task);
+					}
+				}
 			} else if (resultCode == RESULT_CANCELED) {
 				// Handle cancel
 			}
