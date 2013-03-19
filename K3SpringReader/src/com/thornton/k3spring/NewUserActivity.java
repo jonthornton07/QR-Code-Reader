@@ -1,22 +1,17 @@
 package com.thornton.k3spring;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.EditText;
 
-public class ScannerActivity extends Activity{
 
-	private TextView results;
+public class NewUserActivity extends Activity{
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.scanner_activity);
-
-		results = (TextView) findViewById(R.id.textView2);
-
-
+		setContentView(R.layout.new_user_activity);
 	}
 
 	@Override
@@ -25,6 +20,9 @@ public class ScannerActivity extends Activity{
 		return true;
 	}
 
-
-
+	public void save(final View v){
+		final EditText name = (EditText) findViewById(R.id.name);
+		SharedPreferencesWrapper.saveString(this, SharedPreferencesWrapper.NAME_KEY, name.getText().toString());
+		this.finish();
+	}
 }
