@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LauncherActivity extends Activity{
@@ -50,7 +51,6 @@ public class LauncherActivity extends Activity{
 		if (requestCode == 0) {
 			if (resultCode == RESULT_OK) {
 				final String contents = data.getStringExtra("SCAN_RESULT"); //this is the result
-				//results.setText(contents);
 				final Task newTask = new Task(contents);
 				newTask.toString();
 
@@ -59,15 +59,48 @@ public class LauncherActivity extends Activity{
 				if(tasks.isEmpty()){
 					helper.addTask(newTask);
 				}else{
+					newTask.markComplete();
 					for(final Task task : tasks){
 						task.markComplete();
 						helper.updateAllTasksToComplete(task);
 					}
 				}
+				updateTaskUI(newTask);
 			} else if (resultCode == RESULT_CANCELED) {
 				// Handle cancel
 			}
 		}
+	}
+
+	private void updateTaskUI(final Task task){
+		final TextView status = (TextView) findViewById(R.id.task_status);
+		final TextView statusLabel = (TextView) findViewById(R.id.task_status_label);
+		final TextView desc = (TextView) findViewById(R.id.task_desc);
+		final TextView descLabel = (TextView) findViewById(R.id.task_desc_label);
+		final TextView start = (TextView) findViewById(R.id.task_start);
+		final TextView startLabel = (TextView) findViewById(R.id.task_start_label);
+		final TextView end = (TextView) findViewById(R.id.task_end);
+		final TextView endLabel = (TextView) findViewById(R.id.task_end_label);
+		findViewById(R.id.no_tasks_started).setVisibility(View.GONE);
+		status.setVisibility(View.VISIBLE);
+		desc.setVisibility(View.VISIBLE);
+		start.setVisibility(View.VISIBLE);
+		statusLabel.setVisibility(View.VISIBLE);
+		descLabel.setVisibility(View.VISIBLE);
+		startLabel.setVisibility(View.VISIBLE);
+
+		if(task.getStatus() == Task.IN_PROGRESS){
+			status.setText(getString(R.string.in_progress));
+			endLabel.setVisibility(View.GONE);
+			end.setVisibility(View.GONE);
+		}else{
+			status.setText(getString(R.string.completed));
+			endLabel.setVisibility(View.VISIBLE);
+			end.setVisibility(View.VISIBLE);
+			end.setText(task.getEnd());
+		}
+		desc.setText(task.getTasks());
+		start.setText(task.getStart());
 	}
 
 	private void launchScannerMarket(){
