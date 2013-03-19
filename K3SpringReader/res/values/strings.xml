@@ -6,5 +6,9 @@
     <string name="title_activity_launcher">LauncherActivity</string>
     
     <string name="scan_now">Scan Now</string>
+    <string name="view_history">History</string>
+    <string name="first_time_greeting">Hello, please enter your full name.</string>
+    <string name="first_and_last_name">First and last name</string>
+    <string name="save">Save</string>
 
 </resources>
