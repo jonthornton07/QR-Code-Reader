@@ -58,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	public List<Task> getTasksFromId(final String id){
 		final SQLiteDatabase db = getWritableDatabase();
-		final String where = TaskTable.TASK_ID + "=? and " + TaskTable.STATUS + "=" + Task.IN_PROGRESS;
+		final String where = TaskTable.TASK_ID + "=? and (" + TaskTable.END + " IS NULL OR " + TaskTable.END + "= '')";
 		final String[] whereArgs = new String[] {id};
 
 		final String[] cols = new String[]{TaskTable.ID, TaskTable.TASK_ID, TaskTable.DESC, TaskTable.START, TaskTable.END, TaskTable.STATUS};
