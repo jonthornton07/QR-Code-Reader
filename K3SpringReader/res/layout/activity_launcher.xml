@@ -130,7 +130,19 @@
         android:textColor="@color/white"
         android:textSize="15sp"
         android:visibility="gone" />
-
+    
+    <Button
+        android:id="@+id/mark_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+  		android:layout_below="@+id/task_end"
+  		android:text="@string/mark_complete"
+  		android:layout_centerHorizontal="true"
+  		android:visibility="gone"
+  		android:onClick="markComplete"/>      
+ 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

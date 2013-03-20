@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class LauncherActivity extends Activity{
+
+	private Task task;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -52,27 +54,26 @@ public class LauncherActivity extends Activity{
 			if (resultCode == RESULT_OK) {
 				final String contents = data.getStringExtra("SCAN_RESULT"); //this is the result
 				final Task newTask = new Task(contents);
-				newTask.toString();
 
 				final DatabaseHelper helper = new DatabaseHelper(this);
 				final List<Task> tasks = helper.getTasksFromId(newTask.getId());
+
 				if(tasks.isEmpty()){
 					helper.addTask(newTask);
+					this.task = newTask;
 				}else{
-					newTask.markComplete();
-					for(final Task task : tasks){
-						task.markComplete();
-						helper.updateAllTasksToComplete(task);
-					}
+					this.task = tasks.get(0);
+					task.markEndTime();
+					helper.updateAllTasksToComplete(task);
 				}
-				updateTaskUI(newTask);
+				updateTaskUI();
 			} else if (resultCode == RESULT_CANCELED) {
 				// Handle cancel
 			}
 		}
 	}
 
-	private void updateTaskUI(final Task task){
+	private void updateTaskUI(){
 		final TextView status = (TextView) findViewById(R.id.task_status);
 		final TextView statusLabel = (TextView) findViewById(R.id.task_status_label);
 		final TextView desc = (TextView) findViewById(R.id.task_desc);
@@ -81,6 +82,7 @@ public class LauncherActivity extends Activity{
 		final TextView startLabel = (TextView) findViewById(R.id.task_start_label);
 		final TextView end = (TextView) findViewById(R.id.task_end);
 		final TextView endLabel = (TextView) findViewById(R.id.task_end_label);
+		final Button button = (Button) findViewById(R.id.mark_complete);
 		findViewById(R.id.no_tasks_started).setVisibility(View.GONE);
 		status.setVisibility(View.VISIBLE);
 		desc.setVisibility(View.VISIBLE);
@@ -89,17 +91,18 @@ public class LauncherActivity extends Activity{
 		descLabel.setVisibility(View.VISIBLE);
 		startLabel.setVisibility(View.VISIBLE);
 
-		if(task.getStatus() == Task.IN_PROGRESS){
-			status.setText(getString(R.string.in_progress));
+		if((null == task.getEnd()) || task.getEnd().equals("")){
 			endLabel.setVisibility(View.GONE);
 			end.setVisibility(View.GONE);
+			button.setVisibility(View.GONE);
 		}else{
-			status.setText(getString(R.string.completed));
 			endLabel.setVisibility(View.VISIBLE);
 			end.setVisibility(View.VISIBLE);
 			end.setText(task.getEnd());
+			button.setVisibility(View.VISIBLE);
 		}
-		desc.setText(task.getTasks());
+		status.setText((task.getStatus() == Task.IN_PROGRESS) ? getString(R.string.in_progress) : getString(R.string.completed));
+		desc.setText(task.getId() + "\n" + task.getTasks());
 		start.setText(task.getStart());
 	}
 
@@ -110,6 +113,17 @@ public class LauncherActivity extends Activity{
 	}
 
 	public void viewHistory(final View v){
-		Toast.makeText(this, "History is uunder development", 2000).show();
+		final Intent intent = new Intent(this, ReviewHistoryActivity.class);
+		startActivity(intent);
+	}
+
+	public void markComplete(final View v){
+		final TextView status = (TextView) findViewById(R.id.task_status);
+		final Button button = (Button) findViewById(R.id.mark_complete);
+		status.setText(getString(R.string.completed));
+		button.setVisibility(View.GONE);
+		final DatabaseHelper helper = new DatabaseHelper(this);
+		this.task.setStatus(Task.COMPLETE);
+		helper.updateAllTasksToComplete(task);
 	}
 }

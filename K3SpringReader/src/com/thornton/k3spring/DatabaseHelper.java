@@ -58,12 +58,31 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	public List<Task> getTasksFromId(final String id){
 		final SQLiteDatabase db = getWritableDatabase();
-		final String where = TaskTable.TASK_ID + "=? and " + TaskTable.STATUS + "=" + Task.IN_PROGRESS ;
+		final String where = TaskTable.TASK_ID + "=? and " + TaskTable.STATUS + "=" + Task.IN_PROGRESS;
 		final String[] whereArgs = new String[] {id};
 
 		final String[] cols = new String[]{TaskTable.ID, TaskTable.TASK_ID, TaskTable.DESC, TaskTable.START, TaskTable.END, TaskTable.STATUS};
 
 		final Cursor c = db.query(TaskTable.NAME, cols, where, whereArgs, null, null, TaskTable.TASK_ID);
+
+		final List<Task> tasks = new ArrayList<Task>();
+
+		while(c.moveToNext()){
+			tasks.add(extractTaskFromCursor(c));
+		}
+
+		c.close();
+
+		return tasks;
+	}
+
+	public List<Task> getAllTasksByDay(final String day){
+		final SQLiteDatabase db = getWritableDatabase();
+		final String where = TaskTable.START + " like '" + day + "%'";
+
+		final String[] cols = new String[]{TaskTable.ID, TaskTable.TASK_ID, TaskTable.DESC, TaskTable.START, TaskTable.END, TaskTable.STATUS};
+
+		final Cursor c = db.query(TaskTable.NAME, cols, where, null, null, null, TaskTable.TASK_ID);
 
 		final List<Task> tasks = new ArrayList<Task>();
 
