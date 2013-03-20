@@ -52,6 +52,9 @@ public class Task {
 
 	public void markComplete(){
 		this.setStatus(COMPLETE);
+	}
+
+	public void markEndTime(){
 		this.setEnd(getTime());
 	}
 
