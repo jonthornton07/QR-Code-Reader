@@ -10,10 +10,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * Review history activity.  This is shown when the history button is clicked.
+ * @author JT
+ *
+ */
 public class ReviewHistoryActivity extends Activity{
 
+	/**List of tasks for the day*/
 	private List<Task> tasks;
 
+	/**
+	 * Create the activity.  Part of the activity lifecycle
+	 * @param savedInstanceState - saved state of the application is null unless the activity is
+	 * brought from the background
+	 */
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,6 +38,10 @@ public class ReviewHistoryActivity extends Activity{
 		content.setText(createHistoryString());
 	}
 
+	/**
+	 * Create the history String used to show the history as well as send the email
+	 * @return the string of history
+	 */
 	private String createHistoryString(){
 		final StringBuilder builder = new StringBuilder();
 		final String format = "MM/dd/yyyy";
@@ -53,6 +68,10 @@ public class ReviewHistoryActivity extends Activity{
 		return builder.toString();
 	}
 
+	/**
+	 * Method used to send an email. This is called from the XML layout android:onClick of the send report button.
+	 * @param v - view that was clicked on.
+	 */
 	public void sendEmail(final View v){
 		final Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("message/rfc822");
