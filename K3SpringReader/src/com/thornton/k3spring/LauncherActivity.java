@@ -15,10 +15,16 @@ public class LauncherActivity extends Activity{
 
 	private Task task;
 
+	private static final String TASK_KEY = "task";
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_launcher);
+		if(null != savedInstanceState){
+			task = (Task) savedInstanceState.getSerializable(TASK_KEY);
+			updateTaskUI();
+		}
 	}
 
 	@Override
@@ -27,6 +33,14 @@ public class LauncherActivity extends Activity{
 		if(SharedPreferencesWrapper.getString(this, SharedPreferencesWrapper.NAME_KEY).equals(SharedPreferencesWrapper.DEFAULT_STRING)){
 			launchNewUserActivity();
 		}
+	}
+
+	@Override
+	public void onSaveInstanceState(final Bundle savedInstanceState) {
+		if(null != task){
+			savedInstanceState.putSerializable(TASK_KEY, task);
+		}
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override

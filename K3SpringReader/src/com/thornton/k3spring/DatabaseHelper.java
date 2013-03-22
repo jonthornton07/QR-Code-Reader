@@ -44,8 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	}
 
 	public void updateAllTasksToComplete(final Task task){
-		final String where = TaskTable.TASK_ID + "=? and " + TaskTable.STATUS + "=" + Task.IN_PROGRESS ;
-		final String[] whereArgs = new String[] {task.getId()};
+		final String where = TaskTable.ID + "=? and " + TaskTable.STATUS + "=" + Task.IN_PROGRESS ;
+		final String[] whereArgs = new String[] {Integer.toString(task.getTableId())};
 
 
 		final ContentValues cv = new ContentValues();

@@ -1,9 +1,12 @@
 package com.thornton.k3spring;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Task {
+public class Task implements Serializable{
+
+	private static final long serialVersionUID = -5104294068493842844L;
 
 	private static final String FORMAT = "MM/dd/yyyy hh:mm a";
 

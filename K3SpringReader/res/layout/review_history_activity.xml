@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black" >
+    android:background="@color/black"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/email">
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </ScrollView>
+    
+    <Button
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-		android:layout_marginBottom="10dp"
-        android:textSize="15sp"
-        android:textColor="@color/white" />
+        android:text="@string/send_report"
+        android:layout_alignParentBottom="true"
+        android:onClick="sendEmail"/>
 
-</LinearLayout>
+</RelativeLayout>
