@@ -4,36 +4,61 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Task item.  Associated with the QR code and contains all the details of the QR Code
+ * @author JT
+ *
+ */
 public class Task implements Serializable{
 
+	/**Unique id of the object*/
 	private static final long serialVersionUID = -5104294068493842844L;
 
+	/**Format of dates going into the database*/
 	private static final String FORMAT = "MM/dd/yyyy hh:mm a";
 
+	/**String to add new line characters*/
 	private static final String NEW_LINE = "\n";
 
+	/**Int for the value of the task not being started*/
 	public static final int NOT_STARTED = 0;
 
+	/**Int for the value of the task being complete*/
 	public static final int COMPLETE = 2;
 
+	/**Int for the value of the task being in progress*/
 	public static final int IN_PROGRESS = 1;
 
+	/**Id of the task*/
 	private String id;
 
+	/**Description of the task*/
 	private String tasks;
 
+	/**Start time of the task*/
 	private String start;
 
+	/**End time of the task*/
 	private String end;
 
+	/**Status of the task*/
 	private int status;
 
+	/**Table id of the task*/
 	private int tableId;
 
+	/**
+	 * Constructor for the task
+	 * @param tableId - table id of the task
+	 */
 	public Task(final int tableId){
 		this.setTableId(tableId);
 	}
 
+	/**
+	 * Constructor  for the task
+	 * @param taskString - string to create the task from
+	 */
 	public Task(final String taskString){
 		final String[] results = taskString.split(NEW_LINE);
 		this.id = results[0];
@@ -48,15 +73,25 @@ public class Task implements Serializable{
 		this.start = getTime();
 	}
 
+	/**
+	 * 
+	 * @return the time
+	 */
 	private String getTime() {
 		final Date date = new Date();
 		return new SimpleDateFormat(FORMAT).format(date);
 	}
 
+	/**
+	 * Mark the task complete
+	 */
 	public void markComplete(){
 		this.setStatus(COMPLETE);
 	}
 
+	/**
+	 * Set the end time
+	 */
 	public void markEndTime(){
 		this.setEnd(getTime());
 	}

@@ -9,27 +9,53 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Database helper for the program. Creates, deletes and stores data in the database.
+ * @author JT
+ *
+ */
 public class DatabaseHelper extends SQLiteOpenHelper{
 
+	/**Name of the database*/
 	public static final String DATABASE_NAME = "tasks.db";
 
+	/**Version of the database*/
 	public static final int  DATABASE_VERSION = 1;
 
+	/**
+	 * Constructor for the class
+	 * @param context - Activity context
+	 */
 	public DatabaseHelper(final Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	/**
+	 * Create the tables in the database
+	 * @param db - database created
+	 */
 	@Override
 	public void onCreate(final SQLiteDatabase db) {
 		db.execSQL(TaskTable.CREATE);
 	}
 
+	/**
+	 * Called when the data base is being upgraded
+	 * @param db - database
+	 * @param oldVersion - old db version name
+	 * @param newVersion - new db version
+	 */
 	@Override
 	public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
 		db.execSQL(TaskTable.DROP);
 		onCreate(db);
 	}
 
+	/**
+	 * Add a task to the database
+	 * @param task - task to add to the database
+	 * @return the id of the task
+	 */
 	public long addTask(final Task task){
 		final ContentValues cv = new ContentValues();
 		cv.put(TaskTable.TASK_ID, task.getId());
@@ -43,6 +69,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	}
 
+	/**
+	 * Update the tasks in the database to have an end time
+	 * @param task - task to give an end time to
+	 */
 	public void updateAllTasksToComplete(final Task task){
 		final String where = TaskTable.ID + "=? and " + TaskTable.STATUS + "=" + Task.IN_PROGRESS ;
 		final String[] whereArgs = new String[] {Integer.toString(task.getTableId())};
@@ -56,6 +86,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		db.update(TaskTable.NAME, cv, where, whereArgs);
 	}
 
+	/**
+	 * Get all the tasks in the database with an id
+	 * @param id - id of the tasks
+	 * @return all the tasks in the database with an id
+	 */
 	public List<Task> getTasksFromId(final String id){
 		final SQLiteDatabase db = getWritableDatabase();
 		final String where = TaskTable.TASK_ID + "=? and (" + TaskTable.END + " IS NULL OR " + TaskTable.END + "= '')";
@@ -76,6 +111,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		return tasks;
 	}
 
+	/**
+	 * Get all the tasks that are in a day
+	 * @param day - day to get tasks for
+	 * @return all the tasks that are in a day
+	 */
 	public List<Task> getAllTasksByDay(final String day){
 		final SQLiteDatabase db = getWritableDatabase();
 		final String where = TaskTable.START + " like '" + day + "%'";
@@ -95,6 +135,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		return tasks;
 	}
 
+	/**
+	 * Extract the task from the retrieved data
+	 * @param c - cursor containing the data
+	 * @return the task from the cursor
+	 */
 	private Task extractTaskFromCursor(final Cursor c) {
 		final Task task = new Task(c.getInt(c.getColumnIndex(TaskTable.ID)));
 		task.setId(c.getString(c.getColumnIndex(TaskTable.TASK_ID)));
