@@ -19,5 +19,6 @@
 	<string name="completed">Completed</string>
 	<string name="task_information">Task Information</string>
 	<string name="mark_complete">Mark Complete</string>
+	<string name="send_report">Send Report</string>
     
 </resources>
