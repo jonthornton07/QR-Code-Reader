@@ -4,23 +4,41 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Main activity for the application
+ * @author JT
+ *
+ */
 public class LauncherActivity extends Activity{
 
+	/**Current task being shown*/
 	private Task task;
 
+	/**Key to get the task from the bundle*/
+	private static final String TASK_KEY = "task";
+
+	/**
+	 * Create the activity
+	 * @param savedInstanceState - saved state of the activity
+	 */
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_launcher);
+		if(null != savedInstanceState){
+			task = (Task) savedInstanceState.getSerializable(TASK_KEY);
+			updateTaskUI();
+		}
 	}
 
+	/**
+	 * Resume the activity
+	 */
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -29,17 +47,30 @@ public class LauncherActivity extends Activity{
 		}
 	}
 
+	/**
+	 * Save the state of the activity
+	 * @param savedInstanceState - bundle to save the state in
+	 */
 	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_launcher, menu);
-		return true;
+	public void onSaveInstanceState(final Bundle savedInstanceState) {
+		if(null != task){
+			savedInstanceState.putSerializable(TASK_KEY, task);
+		}
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
+	/**
+	 * Launch the new user activity
+	 */
 	private void launchNewUserActivity(){
 		final Intent intent = new Intent(this, NewUserActivity.class);
 		this.startActivity(intent);
 	}
 
+	/**
+	 * Launch the scanner activity
+	 * @param v - view calling this method
+	 */
 	public void scan(final View v){
 		final Intent intent = new Intent("com.google.zxing.client.android.SCAN");
 		intent.putExtra("SCAN_MODE", "QR_CODE_MODE");//for Qr code, its "QR_CODE_MODE" instead of "PRODUCT_MODE"
@@ -47,6 +78,9 @@ public class LauncherActivity extends Activity{
 		startActivityForResult(intent, 0);
 	}
 
+	/**
+	 * Called when the scan has completed and is being returned to the application
+	 */
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -73,7 +107,11 @@ public class LauncherActivity extends Activity{
 		}
 	}
 
+	/**
+	 * Update the ui to show the task scanned
+	 */
 	private void updateTaskUI(){
+		if(null == task){return;}
 		final TextView status = (TextView) findViewById(R.id.task_status);
 		final TextView statusLabel = (TextView) findViewById(R.id.task_status_label);
 		final TextView desc = (TextView) findViewById(R.id.task_desc);
@@ -106,17 +144,19 @@ public class LauncherActivity extends Activity{
 		start.setText(task.getStart());
 	}
 
-	private void launchScannerMarket(){
-		final Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
-		final Intent marketIntent = new Intent(Intent.ACTION_VIEW,marketUri);
-		startActivity(marketIntent);
-	}
-
+	/**
+	 * Launch the view history activity
+	 * @param v - view calling this method
+	 */
 	public void viewHistory(final View v){
 		final Intent intent = new Intent(this, ReviewHistoryActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * Mark the task complete
+	 * @param v - view calling this method
+	 */
 	public void markComplete(final View v){
 		final TextView status = (TextView) findViewById(R.id.task_status);
 		final Button button = (Button) findViewById(R.id.mark_complete);
