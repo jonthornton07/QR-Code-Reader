@@ -77,7 +77,7 @@ public class ReviewHistoryActivity extends Activity{
 		i.setType("message/rfc822");
 		final String format = "MM/dd/yyyy";
 		final Date date = new Date();
-		i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"brianclyden@gmail.com"});
+		i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"<email>"});
 		i.putExtra(Intent.EXTRA_SUBJECT, SharedPreferencesWrapper.getString(this, SharedPreferencesWrapper.NAME_KEY) + " " + new SimpleDateFormat(format).format(date));
 		i.putExtra(Intent.EXTRA_TEXT   , createHistoryString());
 		startActivity(i);
